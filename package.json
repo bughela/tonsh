@@ -4,7 +4,7 @@
   "description": "Web-based tmux client with first-class mobile support",
   "type": "module",
   "bin": {
-    "tonsh": "./bin/tonsh.js"
+    "tonsh": "bin/tonsh.js"
   },
   "files": [
     "bin",
