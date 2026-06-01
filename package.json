@@ -42,7 +42,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@fastify/static": "^8.0.0",
+    "@fastify/static": "^9.1.3",
     "@fastify/websocket": "^11.0.0",
     "fastify": "^5.0.0",
     "node-pty": "^1.0.0"
@@ -52,6 +52,6 @@
     "@xterm/addon-web-links": "^0.11.0",
     "@xterm/xterm": "^5.5.0",
     "bootstrap": "^5.3.8",
-    "esbuild": "^0.24.0"
+    "esbuild": "^0.28.0"
   }
 }
