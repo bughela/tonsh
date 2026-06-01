@@ -7,7 +7,7 @@ Attach to your existing tmux sessions from any browser — desktop or phone — 
 ## Quick start
 
 ```sh
-npx tonsh
+npx @bughela/tonsh
 ```
 
 Open `http://localhost:7000` in a browser. Pick or create a session in the sidebar, and start working.
@@ -31,21 +31,21 @@ tonsh [options]
 Run on a different port, bound to all interfaces:
 
 ```sh
-npx tonsh --host 0.0.0.0 -p 9000
+npx @bughela/tonsh --host 0.0.0.0 -p 9000
 ```
 
 Run in the background (writes a PID file to `$XDG_RUNTIME_DIR/tonsh.pid` or `/tmp/tonsh-<uid>.pid`):
 
 ```sh
-npx tonsh -d
-npx tonsh --stop      # later
-npx tonsh -d --restart
+npx @bughela/tonsh -d
+npx @bughela/tonsh --stop      # later
+npx @bughela/tonsh -d --restart
 ```
 
 Require a shared secret instead of relying on a reverse proxy:
 
 ```sh
-npx tonsh -s "$(head -c32 /dev/urandom | base64)"
+npx @bughela/tonsh -s "$(head -c32 /dev/urandom | base64)"
 ```
 
 The browser prompts for the secret on first connect and remembers it in `localStorage`.
