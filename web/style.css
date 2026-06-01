@@ -1,166 +1,264 @@
+/* ─── Fonts ─────────────────────────────────────────────────── */
+
 @font-face {
   font-family: 'Symbols Nerd Font Mono';
   src: url('/fonts/SymbolsNerdFontMono.woff2') format('woff2');
   font-display: swap;
-  font-weight: normal;
-  font-style: normal;
 }
 
 @font-face {
   font-family: 'Noto Sans Symbols 2';
   src: url('/fonts/NotoSansSymbols2.woff2') format('woff2');
   font-display: swap;
-  font-weight: normal;
-  font-style: normal;
 }
 
-* {
+/* ─── Design tokens ─────────────────────────────────────────── */
+
+:root {
+  /* Backgrounds — cold neutrals with slight blue undertone */
+  --bg-0: #0b0d12;    /* deepest – main app shell */
+  --bg-1: #10131a;    /* base panel – sidebar body */
+  --bg-2: #161a23;    /* elevated – footer / row hover */
+  --bg-3: #1d2330;    /* button surface */
+  --bg-term: #0e1117; /* terminal canvas backdrop */
+
+  /* Foreground */
+  --fg-0: #e6eaf2;    /* primary */
+  --fg-1: #9aa1ad;    /* secondary */
+  --fg-2: #5d6470;    /* muted (labels) */
+  --fg-3: #3a404b;    /* faint */
+
+  /* Lines */
+  --line-1: rgba(255, 255, 255, 0.04);
+  --line-2: rgba(255, 255, 255, 0.08);
+
+  /* Accent — restrained amber phosphor */
+  --accent: #d4a017;
+  --accent-soft: #272420; /* bg-1 + 12% accent, precomputed solid */
+  --accent-edge: rgba(212, 160, 23, 0.6);
+
+  /* Danger – warm rust, used on hover only */
+  --danger: #d97757;
+  --danger-soft: rgba(217, 119, 87, 0.12);
+
+  /* Type */
+  --ui-mono:
+    'SF Mono', 'Cascadia Mono', 'JetBrains Mono', 'Menlo',
+    'Consolas', 'Ubuntu Mono', 'DejaVu Sans Mono',
+    'Symbols Nerd Font Mono', 'Noto Sans Symbols 2', monospace;
+
+  /* Spacing */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+
+  /* Radii */
+  --r-1: 3px;
+  --r-2: 5px;
+
+  /* Motion */
+  --ease-fast: 100ms cubic-bezier(0.2, 0, 0, 1);
+  --ease-drawer: 220ms cubic-bezier(0.32, 0.72, 0, 1);
+
+  --sidebar-w: 240px;
+}
+
+/* ─── Reset / base ──────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html,
-body,
-#app {
+body {
+  margin: 0;
   height: 100%;
   width: 100%;
-  margin: 0;
-}
-
-body {
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: var(--ui-mono);
+  font-size: 13px;
+  line-height: 1.45;
+  font-feature-settings: 'liga' 0;
   overflow: hidden;
+  /* iOS Safari / mobile Chrome can still rubber-band the page even with
+     overflow:hidden when the soft keyboard / virtual keypad changes the
+     visible area. Stop the chain explicitly. */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 #app {
-  display: flex;
+  overscroll-behavior: none;
 }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* ─── App shell ─────────────────────────────────────────────── */
+
+#app {
+  display: flex;
+  height: 100%;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
 
 #sidebar {
-  --bs-offcanvas-width: min(80vw, 280px);
+  position: relative;
+  width: var(--sidebar-w);
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-1);
+  border-right: 1px solid var(--line-1);
 }
 
-/* Static sidebar column on desktop (offcanvas-md => block at md+). */
-@media (min-width: 768px) {
-  #sidebar {
-    width: 220px;
-    border-right: 1px solid #444;
-    display: flex;
-    flex-direction: column;
-  }
-  /* Bootstrap hides .offcanvas-md .offcanvas-header at the breakpoint;
-     re-show it so the brand/buttons stay visible on desktop. */
-  #sidebar .offcanvas-header {
-    display: flex !important;
-  }
-  /* Bootstrap turns .offcanvas-body into display:flex;flex-grow:0 at the
-     breakpoint, which collapses the list to its content width. Restore a
-     full-width block so the list fills the 220px sidebar. */
-  #sidebar .offcanvas-body {
-    display: block;
-    flex-grow: 1;
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-
-#session-list {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.sa-grid {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  align-items: center;
-  gap: 4px 6px;
-}
-
-.sa-label {
-  font-size: 12px;
-  color: #adb5bd;
-}
-
-.sa-grid button {
-  width: 30px;
-  height: 28px;
+.sidebar-head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: #2b3035;
-  color: #dee2e6;
-  border: 1px solid #444;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
+  justify-content: space-between;
+  height: 42px;
+  padding: 0 var(--s-4);
+  border-bottom: 1px solid var(--line-1);
 }
 
-.sa-grid button:hover {
-  background: #0d6efd;
-  border-color: #0d6efd;
-  color: #fff;
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--fg-0);
 }
 
-.sa-grid button.sa-kill:hover {
-  background: #c0392b;
-  border-color: #c0392b;
+.brand-name {
+  /* slight tracking-out feels typeset-careful */
+  letter-spacing: 0.08em;
 }
 
-/* Without a connected session only "New Session" is usable. */
-#app:not(.has-session) .sa-grid button:not(#new-session) {
-  opacity: 0.35;
-  pointer-events: none;
+.brand-caret {
+  color: var(--accent);
+  margin-left: 2px;
+  animation: caret-blink 1.06s steps(1, end) infinite;
+  text-shadow: 0 0 8px rgba(212, 160, 23, 0.35);
 }
 
-#open-sidebar {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 1030;
-  opacity: 0.75;
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
+
+.sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--s-2) 0;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+.sidebar-body::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-body::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: 3px;
+}
+
+/* ─── Session list ──────────────────────────────────────────── */
 
 #session-list li.session {
-  border-bottom: 1px solid #343a40;
-}
-
-#session-list .row,
-#session-list li.window {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 14px;
+  padding: 2px 0;
 }
 
 #session-list .row {
-  padding: 9px 12px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 6px var(--s-4);
+  cursor: pointer;
+  color: var(--fg-1);
+  font-size: 13px;
+  transition: color var(--ease-fast), background-color var(--ease-fast);
+}
+
+#session-list .row:hover {
+  color: var(--fg-0);
+  background: var(--bg-2);
 }
 
 #session-list li.session.active > .row {
-  background: #0d6efd;
+  color: var(--fg-0);
+  background: var(--bg-2);
 }
 
-#session-list .row:hover,
-#session-list li.window:hover {
-  background: #2b3035;
+#session-list li.session.active > .row::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  margin-left: -10px;
+  margin-right: 6px;
+  background: var(--fg-1);
+  border-radius: 0 2px 2px 0;
 }
 
 #session-list .windows {
-  border-top: 1px solid #2b3035;
+  padding: 2px 0 6px 0;
 }
 
 #session-list li.window {
-  padding: 7px 12px 7px 26px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 4px var(--s-4) 4px 28px;
+  cursor: pointer;
+  color: var(--fg-2);
   font-size: 13px;
-  color: #c7c7c7;
+  transition: color var(--ease-fast), background-color var(--ease-fast);
+}
+
+#session-list li.window:hover {
+  color: var(--fg-1);
+  background: var(--bg-2);
 }
 
 #session-list li.window.active {
-  color: #fff;
-  border-left: 3px solid #0d6efd;
-  padding-left: 23px;
+  color: var(--fg-0);
+  background: var(--accent-soft);
+}
+
+#session-list li.window.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-edge);
 }
 
 #session-list .name {
@@ -171,36 +269,190 @@ body {
   white-space: nowrap;
 }
 
-/* Desktop sidebar collapse toggle. */
-@media (min-width: 768px) {
-  #open-sidebar {
-    display: none;
-  }
-  #app.sidebar-collapsed #sidebar {
-    display: none;
-  }
-  #app.sidebar-collapsed #open-sidebar {
-    display: inline-block;
-  }
+/* Index prefix for window rows ("0:", "1:") in muted color */
+#session-list li.window .name::first-letter {
+  /* not used — kept simple */
 }
 
+#session-list li.session.active > .row::before {
+  background: var(--fg-2);
+}
+
+.empty-state {
+  margin: var(--s-4);
+  font-size: 12px;
+  color: var(--fg-2);
+}
+
+/* ─── Sidebar footer ────────────────────────────────────────── */
+
+.sidebar-foot {
+  border-top: 1px solid var(--line-1);
+  padding: var(--s-3) var(--s-3) var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  background: var(--bg-1);
+}
+
+.action-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.action-label {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  user-select: none;
+}
+
+.act-btn {
+  font-size: 12px;
+  padding: 4px 8px;
+  color: var(--fg-1);
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  transition: color var(--ease-fast), background-color var(--ease-fast),
+    border-color var(--ease-fast);
+}
+
+.act-btn:hover {
+  color: var(--fg-0);
+  background: var(--bg-3);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.act-btn:active {
+  transform: scale(0.97);
+}
+
+.act-btn.danger:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: rgba(217, 119, 87, 0.35);
+}
+
+#app:not(.has-session) .act-btn:not(#new-session) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ─── Meta row (font size + keypad toggle) ──────────────────── */
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.font-stepper {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+}
+
+.step-btn {
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  color: var(--fg-1);
+  transition: color var(--ease-fast), background-color var(--ease-fast);
+}
+
+.step-btn:hover {
+  color: var(--fg-0);
+  background: var(--bg-3);
+}
+
+.step-readout {
+  min-width: 32px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--fg-1);
+  padding: 0 4px;
+  border-left: 1px solid var(--line-2);
+  border-right: 1px solid var(--line-2);
+  height: 26px;
+  line-height: 26px;
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--fg-1);
+  border-radius: var(--r-1);
+  transition: color var(--ease-fast), background-color var(--ease-fast);
+}
+
+.ghost-btn:hover {
+  color: var(--fg-0);
+  background: var(--bg-2);
+}
+
+.ghost-btn .icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+#keypad-toggle {
+  margin-left: auto;
+}
+
+/* ─── Floating hamburger for mobile ─────────────────────────── */
+
+#open-sidebar {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 60;
+  width: 32px;
+  height: 32px;
+  color: var(--fg-0);
+  background: var(--bg-2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#open-sidebar:hover {
+  background: var(--bg-3);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+#open-sidebar .icon {
+  font-size: 16px;
+}
+
+/* ─── Main / terminal ───────────────────────────────────────── */
+
 #main {
-  flex: 1;
   position: relative;
+  flex: 1;
   min-width: 0;
-  background: #1e1e1e;
+  background: var(--bg-term);
 }
 
 #terminal {
   position: absolute;
   inset: 0;
-  padding: 4px;
-}
-
-@media (max-width: 767px) {
-  #terminal {
-    padding: 1px;
-  }
+  padding: 6px 4px 4px;
 }
 
 #placeholder {
@@ -209,9 +461,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
-  font-size: 14px;
+  gap: 2px;
+  color: var(--fg-2);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  user-select: none;
+  pointer-events: none;
 }
+
+#placeholder .caret {
+  color: var(--accent);
+  animation: caret-blink 1.06s steps(1, end) infinite;
+}
+
+/* ─── Mobile keypad bar ─────────────────────────────────────── */
 
 #keypad {
   display: none;
@@ -220,12 +483,12 @@ body {
   right: 0;
   bottom: 0;
   height: 46px;
+  padding: 0 var(--s-2);
   gap: 6px;
-  padding: 6px;
-  background: #252526;
-  border-top: 1px solid #333;
-  overflow-x: auto;
+  background: linear-gradient(180deg, var(--bg-1), var(--bg-0));
+  border-top: 1px solid var(--line-2);
   align-items: center;
+  overflow-x: auto;
 }
 
 #app.keypad-open #keypad {
@@ -236,24 +499,133 @@ body {
   bottom: 46px;
 }
 
-#keypad button {
+.key {
   flex: 0 0 auto;
-  min-width: 48px;
-  height: 34px;
-  background: #333;
-  color: #ddd;
-  border: 1px solid #444;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
+  min-width: 44px;
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: var(--fg-1);
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-1);
+  transition: color var(--ease-fast), background-color var(--ease-fast),
+    border-color var(--ease-fast), transform var(--ease-fast);
   touch-action: manipulation;
 }
 
-#keypad button:active {
-  background: #0d6efd;
+.key:hover,
+.key:focus-visible {
+  color: var(--fg-0);
+  background: var(--bg-3);
+  outline: none;
 }
 
-#keypad button.sticky-on {
-  background: #0d6efd;
-  border-color: #3d8bfd;
+.key:active {
+  transform: scale(0.96);
+}
+
+.key.sticky-on {
+  color: #18120a;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-edge), 0 0 10px var(--accent-soft);
+}
+
+/* ─── Desktop sidebar collapse ──────────────────────────────── */
+
+#app.sidebar-collapsed #sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #open-sidebar {
+    display: none;
+  }
+  #app.sidebar-collapsed #open-sidebar {
+    display: inline-flex;
+  }
+}
+
+/* ─── Mobile drawer ─────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  #sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(86vw, 320px);
+    z-index: 50;
+    border-right: 1px solid var(--line-2);
+    box-shadow: 12px 0 32px rgba(0, 0, 0, 0.4);
+    transform: translateX(-100%);
+    transition: transform var(--ease-drawer);
+  }
+  body[data-drawer='open'] #sidebar {
+    transform: translateX(0);
+  }
+  #drawer-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-drawer);
+  }
+  body[data-drawer='open'] #drawer-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Collapse button is meaningless inside the drawer on mobile;
+     reuse it as a close button so layout stays. */
+  #collapse-sidebar .icon::before {
+    content: '×';
+  }
+  #collapse-sidebar .icon {
+    /* hide original ‹ */
+    font-size: 0;
+  }
+  #collapse-sidebar .icon::before {
+    font-size: 16px;
+  }
+  #terminal {
+    padding: 2px;
+  }
+}
+
+/* ─── Initial reveal stagger ────────────────────────────────── */
+
+#session-list li.session {
+  animation: row-in 280ms cubic-bezier(0.2, 0, 0, 1) backwards;
+}
+#session-list li.session:nth-child(1) { animation-delay: 0ms; }
+#session-list li.session:nth-child(2) { animation-delay: 40ms; }
+#session-list li.session:nth-child(3) { animation-delay: 80ms; }
+#session-list li.session:nth-child(4) { animation-delay: 120ms; }
+#session-list li.session:nth-child(5) { animation-delay: 160ms; }
+#session-list li.session:nth-child(n + 6) { animation-delay: 200ms; }
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+  }
+  /* Caret blink is an ambient signature, not motion; keep it on. */
+  .brand-caret,
+  #placeholder .caret {
+    animation-duration: 1.06s !important;
+  }
 }

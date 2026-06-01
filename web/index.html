@@ -6,79 +6,76 @@
     <title>tonsh</title>
     <link rel="icon" type="image/png" sizes="180x180" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
-    <link rel="stylesheet" href="/bootstrap.min.css" />
     <link rel="stylesheet" href="/xterm.css" />
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body class="bg-dark">
+  <body>
     <div id="app">
-      <button
-        id="open-sidebar"
-        class="btn btn-dark btn-sm"
-        type="button"
-        aria-controls="sidebar"
-        title="Sessions"
-      >
-        ☰
+      <button id="open-sidebar" class="ghost-btn" type="button" aria-label="Open sessions">
+        <span class="icon">☰</span>
       </button>
 
-      <aside
-        id="sidebar"
-        class="offcanvas-md offcanvas-start text-bg-dark"
-        tabindex="-1"
-      >
-        <div class="offcanvas-header border-bottom border-secondary d-flex align-items-center">
-          <span class="fw-semibold">TONSH</span>
-          <button
-            id="collapse-sidebar"
-            class="btn btn-dark btn-sm ms-auto"
-            type="button"
-            title="Hide sidebar"
-          >
-            ‹
-          </button>
-        </div>
-        <div class="offcanvas-body p-0">
-          <ul id="session-list" class="list-unstyled m-0"></ul>
-        </div>
-        <div id="sidebar-footer" class="border-top border-secondary">
-          <div id="session-actions" class="p-2 border-bottom border-secondary">
-            <div class="sa-grid">
-              <span class="sa-label">Session</span>
-              <button id="new-session" type="button" title="New session">＋</button>
-              <button id="rename-session-btn" type="button" title="Rename session">✎</button>
-              <button id="kill-session-btn" class="sa-kill" type="button" title="Kill session">✕</button>
+      <div id="drawer-scrim" aria-hidden="true"></div>
 
-              <span class="sa-label">Window</span>
-              <button id="new-window-btn" type="button" title="New window">＋</button>
-              <button id="rename-window-btn" type="button" title="Rename window">✎</button>
-              <button id="kill-window-btn" class="sa-kill" type="button" title="Kill window">✕</button>
-            </div>
-          </div>
-          <div class="d-flex align-items-center gap-2 p-2">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Font size">
-              <button id="font-minus" class="btn btn-dark" type="button" title="Smaller font">A−</button>
-              <span id="font-size" class="btn btn-dark disabled">14</span>
-              <button id="font-plus" class="btn btn-dark" type="button" title="Larger font">A+</button>
-            </div>
-            <div class="ms-auto d-flex gap-1">
-              <button id="keypad-toggle" class="btn btn-dark btn-sm" type="button" title="Toggle keypad">⌨</button>
-            </div>
-          </div>
+      <aside id="sidebar" aria-label="Sessions">
+        <header class="sidebar-head">
+          <h1 class="brand">
+            <span class="brand-name">tonsh</span><span class="brand-caret" aria-hidden="true">▋</span>
+          </h1>
+          <button id="collapse-sidebar" class="ghost-btn" type="button" aria-label="Hide sidebar">
+            <span class="icon">‹</span>
+          </button>
+        </header>
+
+        <div class="sidebar-body">
+          <ul id="session-list"></ul>
+          <p id="session-empty" class="empty-state" hidden>
+            <span class="dim">no sessions</span>
+          </p>
         </div>
+
+        <footer class="sidebar-foot">
+          <div class="action-rows">
+            <div class="action-row">
+              <span class="action-label">session</span>
+              <button id="new-session" class="act-btn" type="button" title="New session">new</button>
+              <button id="rename-session-btn" class="act-btn" type="button" title="Rename session">rename</button>
+              <button id="kill-session-btn" class="act-btn danger" type="button" title="Kill session">kill</button>
+            </div>
+            <div class="action-row">
+              <span class="action-label">window</span>
+              <button id="new-window-btn" class="act-btn" type="button" title="New window">new</button>
+              <button id="rename-window-btn" class="act-btn" type="button" title="Rename window">rename</button>
+              <button id="kill-window-btn" class="act-btn danger" type="button" title="Kill window">kill</button>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <div class="font-stepper" role="group" aria-label="Font size">
+              <button id="font-minus" class="step-btn" type="button" aria-label="Smaller">−</button>
+              <span id="font-size" class="step-readout">14</span>
+              <button id="font-plus" class="step-btn" type="button" aria-label="Larger">+</button>
+            </div>
+            <button id="keypad-toggle" class="ghost-btn" type="button" title="Toggle keypad" aria-label="Toggle keypad">
+              <span class="icon">↕</span>
+            </button>
+          </div>
+        </footer>
       </aside>
 
       <main id="main">
         <div id="terminal"></div>
-        <div id="placeholder">Select a session</div>
-        <div id="keypad">
-          <button data-seq="\t">Tab</button>
-          <button data-mod="ctrl">Ctrl</button>
-          <button data-seq="\x1b">Esc</button>
-          <button data-seq="\x1b[A">↑</button>
-          <button data-seq="\x1b[B">↓</button>
-          <button data-seq="\x1b[D">←</button>
-          <button data-seq="\x1b[C">→</button>
+        <div id="placeholder">
+          <span class="prompt">select a session</span><span class="caret">▋</span>
+        </div>
+        <div id="keypad" role="toolbar" aria-label="Virtual keys">
+          <button class="key" data-seq="\t">Tab</button>
+          <button class="key" data-mod="ctrl">Ctrl</button>
+          <button class="key" data-seq="\x1b">Esc</button>
+          <button class="key" data-seq="\x1b[A" aria-label="Up">↑</button>
+          <button class="key" data-seq="\x1b[B" aria-label="Down">↓</button>
+          <button class="key" data-seq="\x1b[D" aria-label="Left">←</button>
+          <button class="key" data-seq="\x1b[C" aria-label="Right">→</button>
         </div>
       </main>
     </div>

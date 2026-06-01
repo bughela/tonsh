@@ -1,14 +1,18 @@
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
-import Offcanvas from 'bootstrap/js/dist/offcanvas';
 
 const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
 
+// Drawer state lives on <body data-drawer="open|closed">.
+function openDrawer() {
+  document.body.dataset.drawer = 'open';
+}
+function closeDrawer() {
+  document.body.dataset.drawer = 'closed';
+}
 function closeSidebarOnMobile() {
-  if (!isMobile()) return;
-  const el = document.getElementById('sidebar');
-  Offcanvas.getOrCreateInstance(el).hide();
+  if (isMobile()) closeDrawer();
 }
 
 const FONT_KEY = 'tonsh.fontSize';
@@ -132,8 +136,8 @@ async function fetchSessions() {
     if (last && sessions.some((s) => s.name === last)) {
       connect(last);
     } else if (sessions.length === 0 && isMobile()) {
-      // No sessions: show the sidebar so the user can create/pick one.
-      Offcanvas.getOrCreateInstance(document.getElementById('sidebar')).show();
+      // No sessions: open the drawer so the user can create/pick one.
+      openDrawer();
     }
   }
 }
@@ -141,6 +145,7 @@ async function fetchSessions() {
 function renderSessions(sessions) {
   listEl.innerHTML = '';
   currentWindow = null;
+  document.getElementById('session-empty').hidden = sessions.length > 0;
   for (const s of sessions) {
     const li = document.createElement('li');
     li.className = 'session' + (s.name === current ? ' active' : '');
@@ -531,11 +536,9 @@ document.getElementById('kill-window-btn').onclick = async () => {
   renderSessions(sessions);
 };
 
-const sidebarEl = document.getElementById('sidebar');
-
 document.getElementById('open-sidebar').onclick = () => {
   if (isMobile()) {
-    Offcanvas.getOrCreateInstance(sidebarEl).show();
+    openDrawer();
   } else {
     document.getElementById('app').classList.remove('sidebar-collapsed');
     setTimeout(doResize, 200);
@@ -544,12 +547,20 @@ document.getElementById('open-sidebar').onclick = () => {
 
 document.getElementById('collapse-sidebar').onclick = () => {
   if (isMobile()) {
-    Offcanvas.getOrCreateInstance(sidebarEl).hide();
+    closeDrawer();
   } else {
     document.getElementById('app').classList.add('sidebar-collapsed');
     setTimeout(doResize, 200);
   }
 };
+
+document.getElementById('drawer-scrim').onclick = closeDrawer;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.body.dataset.drawer === 'open') {
+    closeDrawer();
+  }
+});
 
 document.getElementById('keypad-toggle').onclick = () => {
   document.getElementById('app').classList.toggle('keypad-open');

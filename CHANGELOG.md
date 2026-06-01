@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Complete UI redesign — "Atelier Console" terminal-studio aesthetic.
+  Drop Bootstrap entirely in favour of a hand-written design system
+  with cool-neutral dark palette and a restrained amber phosphor
+  accent reserved for active states. Wordmark `tonsh▋` and empty
+  state share a blinking caret signature (kept on even when
+  `prefers-reduced-motion: reduce` is set; every other animation
+  still respects it).
+- Full-mono UI via system mono fallback chain (SF Mono → Cascadia
+  Mono → JetBrains Mono → Menlo → Consolas → Ubuntu Mono → DejaVu
+  Sans Mono). No bundled UI font — system fonts get freetype /
+  ClearType / CoreText hinting that webfonts miss at low DPI. The
+  Symbols Nerd Font Mono and Noto Sans Symbols 2 bundles stay for
+  terminal glyph fallback.
+- Replace Bootstrap Offcanvas with a custom CSS drawer
+  (`transform` + scrim, 220ms cubic-bezier). ESC and scrim-tap
+  close it.
+- Mobile: `overscroll-behavior: none` on the page chain — swiping
+  near the top with the keypad open no longer exposes blank space
+  from the browser's rubber-band scroll.
+- Sidebar: floating hamburger refined for visibility against the
+  terminal background; action buttons swap icons for short text
+  labels (`new` / `rename` / `kill`) with a rust hover on kill;
+  active session shows a faded left rail, active window a 2px amber
+  rail with a subtle phosphor glow; session rows fade-in staggered
+  on first load.
+
+### Removed
+- `bootstrap` runtime dependency. The bundled `bootstrap.min.css`
+  (~232KB) and the offcanvas JS import are gone. Net dist size
+  ≈ −200KB.
+
 ## [0.1.2] - 2026-06-01
 
 ### Changed
