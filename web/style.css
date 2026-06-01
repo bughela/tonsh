@@ -1,0 +1,259 @@
+@font-face {
+  font-family: 'Symbols Nerd Font Mono';
+  src: url('/fonts/SymbolsNerdFontMono.woff2') format('woff2');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans Symbols 2';
+  src: url('/fonts/NotoSansSymbols2.woff2') format('woff2');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+}
+
+#sidebar {
+  --bs-offcanvas-width: min(80vw, 280px);
+  flex-shrink: 0;
+}
+
+/* Static sidebar column on desktop (offcanvas-md => block at md+). */
+@media (min-width: 768px) {
+  #sidebar {
+    width: 220px;
+    border-right: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Bootstrap hides .offcanvas-md .offcanvas-header at the breakpoint;
+     re-show it so the brand/buttons stay visible on desktop. */
+  #sidebar .offcanvas-header {
+    display: flex !important;
+  }
+  /* Bootstrap turns .offcanvas-body into display:flex;flex-grow:0 at the
+     breakpoint, which collapses the list to its content width. Restore a
+     full-width block so the list fills the 220px sidebar. */
+  #sidebar .offcanvas-body {
+    display: block;
+    flex-grow: 1;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+#session-list {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.sa-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 4px 6px;
+}
+
+.sa-label {
+  font-size: 12px;
+  color: #adb5bd;
+}
+
+.sa-grid button {
+  width: 30px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2b3035;
+  color: #dee2e6;
+  border: 1px solid #444;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sa-grid button:hover {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+.sa-grid button.sa-kill:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+/* Without a connected session only "New Session" is usable. */
+#app:not(.has-session) .sa-grid button:not(#new-session) {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+#open-sidebar {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1030;
+  opacity: 0.75;
+}
+
+#session-list li.session {
+  border-bottom: 1px solid #343a40;
+}
+
+#session-list .row,
+#session-list li.window {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#session-list .row {
+  padding: 9px 12px;
+  font-weight: 600;
+}
+
+#session-list li.session.active > .row {
+  background: #0d6efd;
+}
+
+#session-list .row:hover,
+#session-list li.window:hover {
+  background: #2b3035;
+}
+
+#session-list .windows {
+  border-top: 1px solid #2b3035;
+}
+
+#session-list li.window {
+  padding: 7px 12px 7px 26px;
+  font-size: 13px;
+  color: #c7c7c7;
+}
+
+#session-list li.window.active {
+  color: #fff;
+  border-left: 3px solid #0d6efd;
+  padding-left: 23px;
+}
+
+#session-list .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Desktop sidebar collapse toggle. */
+@media (min-width: 768px) {
+  #open-sidebar {
+    display: none;
+  }
+  #app.sidebar-collapsed #sidebar {
+    display: none;
+  }
+  #app.sidebar-collapsed #open-sidebar {
+    display: inline-block;
+  }
+}
+
+#main {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  background: #1e1e1e;
+}
+
+#terminal {
+  position: absolute;
+  inset: 0;
+  padding: 4px;
+}
+
+@media (max-width: 767px) {
+  #terminal {
+    padding: 1px;
+  }
+}
+
+#placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+}
+
+#keypad {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46px;
+  gap: 6px;
+  padding: 6px;
+  background: #252526;
+  border-top: 1px solid #333;
+  overflow-x: auto;
+  align-items: center;
+}
+
+#app.keypad-open #keypad {
+  display: flex;
+}
+
+#app.keypad-open #terminal {
+  bottom: 46px;
+}
+
+#keypad button {
+  flex: 0 0 auto;
+  min-width: 48px;
+  height: 34px;
+  background: #333;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+#keypad button:active {
+  background: #0d6efd;
+}
+
+#keypad button.sticky-on {
+  background: #0d6efd;
+  border-color: #3d8bfd;
+}

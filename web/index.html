@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>tonsh</title>
+    <link rel="icon" type="image/png" sizes="180x180" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="stylesheet" href="/bootstrap.min.css" />
+    <link rel="stylesheet" href="/xterm.css" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="bg-dark">
+    <div id="app">
+      <button
+        id="open-sidebar"
+        class="btn btn-dark btn-sm"
+        type="button"
+        aria-controls="sidebar"
+        title="Sessions"
+      >
+        ☰
+      </button>
+
+      <aside
+        id="sidebar"
+        class="offcanvas-md offcanvas-start text-bg-dark"
+        tabindex="-1"
+      >
+        <div class="offcanvas-header border-bottom border-secondary d-flex align-items-center">
+          <span class="fw-semibold">TONSH</span>
+          <button
+            id="collapse-sidebar"
+            class="btn btn-dark btn-sm ms-auto"
+            type="button"
+            title="Hide sidebar"
+          >
+            ‹
+          </button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <ul id="session-list" class="list-unstyled m-0"></ul>
+        </div>
+        <div id="sidebar-footer" class="border-top border-secondary">
+          <div id="session-actions" class="p-2 border-bottom border-secondary">
+            <div class="sa-grid">
+              <span class="sa-label">Session</span>
+              <button id="new-session" type="button" title="New session">＋</button>
+              <button id="rename-session-btn" type="button" title="Rename session">✎</button>
+              <button id="kill-session-btn" class="sa-kill" type="button" title="Kill session">✕</button>
+
+              <span class="sa-label">Window</span>
+              <button id="new-window-btn" type="button" title="New window">＋</button>
+              <button id="rename-window-btn" type="button" title="Rename window">✎</button>
+              <button id="kill-window-btn" class="sa-kill" type="button" title="Kill window">✕</button>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 p-2">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Font size">
+              <button id="font-minus" class="btn btn-dark" type="button" title="Smaller font">A−</button>
+              <span id="font-size" class="btn btn-dark disabled">14</span>
+              <button id="font-plus" class="btn btn-dark" type="button" title="Larger font">A+</button>
+            </div>
+            <div class="ms-auto d-flex gap-1">
+              <button id="keypad-toggle" class="btn btn-dark btn-sm" type="button" title="Toggle keypad">⌨</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main id="main">
+        <div id="terminal"></div>
+        <div id="placeholder">Select a session</div>
+        <div id="keypad">
+          <button data-seq="\t">Tab</button>
+          <button data-mod="ctrl">Ctrl</button>
+          <button data-seq="\x1b">Esc</button>
+          <button data-seq="\x1b[A">↑</button>
+          <button data-seq="\x1b[B">↓</button>
+          <button data-seq="\x1b[D">←</button>
+          <button data-seq="\x1b[C">→</button>
+        </div>
+      </main>
+    </div>
+    <script src="/bundle.js"></script>
+  </body>
+</html>

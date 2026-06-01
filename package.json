@@ -1,0 +1,57 @@
+{
+  "name": "tonsh",
+  "version": "0.1.0",
+  "description": "Web-based tmux client with first-class mobile support",
+  "type": "module",
+  "bin": {
+    "tonsh": "./bin/tonsh.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "node bin/tonsh.js",
+    "dev": "node scripts/build.js && node bin/tonsh.js",
+    "prepublishOnly": "node scripts/build.js"
+  },
+  "keywords": [
+    "tmux",
+    "terminal",
+    "web",
+    "mobile",
+    "xterm",
+    "pty",
+    "cli"
+  ],
+  "author": "bughela <bughela@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/bughela/tonsh#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bughela/tonsh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bughela/tonsh/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.0",
+    "@fastify/websocket": "^11.0.0",
+    "fastify": "^5.0.0",
+    "node-pty": "^1.0.0"
+  },
+  "devDependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "@xterm/xterm": "^5.5.0",
+    "bootstrap": "^5.3.8",
+    "esbuild": "^0.24.0"
+  }
+}
