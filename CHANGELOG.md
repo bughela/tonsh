@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Bump `@xterm/xterm` to `^6`, `@xterm/addon-fit` to `^0.11`, and
+  `@xterm/addon-web-links` to `^0.12`. None of the removed/renamed
+  options (`overviewRulerWidth`, `windowsMode`, `fastScrollModifier`,
+  the alt→ctrl arrow hack) were in use, so this is a drop-in bump
+  from the API surface we touch.
+
 ## [0.1.1] - 2026-06-01
 
 ### Changed
