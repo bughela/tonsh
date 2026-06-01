@@ -1,6 +1,6 @@
 {
   "name": "@bughela/tonsh",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web-based tmux client with first-class mobile support",
   "type": "module",
   "bin": {
