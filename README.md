@@ -1,5 +1,10 @@
 # tonsh
 
+[![npm version](https://img.shields.io/npm/v/@bughela/tonsh.svg)](https://www.npmjs.com/package/@bughela/tonsh)
+[![npm downloads](https://img.shields.io/npm/dm/@bughela/tonsh.svg)](https://www.npmjs.com/package/@bughela/tonsh)
+[![node](https://img.shields.io/node/v/@bughela/tonsh.svg)](https://nodejs.org)
+[![license](https://img.shields.io/npm/l/@bughela/tonsh.svg)](https://github.com/bughela/tonsh/blob/main/LICENSE)
+
 Web-based tmux client with first-class mobile support.
 
 Attach to your existing tmux sessions from any browser — desktop or phone — without installing anything beyond `npx`.
