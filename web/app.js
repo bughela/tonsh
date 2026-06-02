@@ -382,14 +382,57 @@ window.addEventListener('resize', doResize);
 
 // The mobile virtual keyboard shrinks the visual viewport without firing a
 // window resize. Clamp the app to the visible area so the terminal sits
-// above the keyboard, then keep the prompt in view.
+// above the keyboard, then keep the prompt in view. After Android dismisses
+// the keyboard the canvas is often left with stale pixels in the area the
+// keyboard occupied — its compositor doesn't auto-invalidate that region.
+// Fix: schedule multiple refresh points across the keyboard's animation,
+// and toggle a transform on #app to force compositor layer invalidation.
 if (window.visualViewport) {
   const vv = window.visualViewport;
-  const onViewport = () => {
-    document.getElementById('app').style.height = `${vv.height}px`;
+  const appEl = document.getElementById('app');
+  const settleTimers = [];
+
+  const refreshAll = () => {
+    void appEl.offsetHeight; // force reflow
     doResize();
-    if (term) term.scrollToBottom();
+    if (term && term.cols > 0 && term.rows > 1) {
+      // Nuclear option: force xterm.js to fully reallocate its canvas and
+      // re-rasterize every glyph. Android Chrome leaves stale pixels behind
+      // after a soft-keyboard dismiss and only a hard repaint clears them.
+      if (typeof term.clearTextureAtlas === 'function') {
+        term.clearTextureAtlas();
+      }
+      const cols = term.cols;
+      const rows = term.rows;
+      term.resize(cols, rows - 1);
+      term.resize(cols, rows);
+      term.refresh(0, term.rows - 1);
+      term.scrollToBottom();
+    }
+  };
+
+  const invalidateCompositor = () => {
+    appEl.style.transform = 'translateZ(0)';
+    requestAnimationFrame(() => {
+      appEl.style.transform = '';
+    });
+  };
+
+  const onViewport = () => {
+    appEl.style.height = `${vv.height}px`;
     window.scrollTo(0, 0);
+    while (settleTimers.length) clearTimeout(settleTimers.pop());
+    // Immediate: layout the new height.
+    requestAnimationFrame(refreshAll);
+    // Mid-animation: Android keyboard glide is ~150-250ms.
+    settleTimers.push(setTimeout(refreshAll, 180));
+    // After settle: final pass + compositor kick.
+    settleTimers.push(
+      setTimeout(() => {
+        refreshAll();
+        invalidateCompositor();
+      }, 360)
+    );
   };
   vv.addEventListener('resize', onViewport);
   vv.addEventListener('scroll', onViewport);

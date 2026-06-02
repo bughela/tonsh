@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Android Chrome leaves stale pixels in the area a soft keyboard
+  occupied after it's dismissed (compositor doesn't auto-invalidate).
+  The `visualViewport` handler now schedules three refresh passes
+  across the keyboard's glide (immediate / mid-animation / after
+  settle) and forces xterm.js to fully reallocate its canvas via
+  `clearTextureAtlas()` + a one-row resize wiggle, plus toggles a
+  `translateZ(0)` transform on `#app` to kick the compositor.
+
 ### Changed
 - Complete UI redesign — "Atelier Console" terminal-studio aesthetic.
   Drop Bootstrap entirely in favour of a hand-written design system
