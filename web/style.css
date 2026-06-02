@@ -327,6 +327,14 @@ h1 {
     border-color var(--ease-fast);
 }
 
+.act-btn.icon-btn {
+  font-size: 15px;
+  min-width: 30px;
+  padding: 2px 6px;
+  text-align: center;
+  line-height: 1;
+}
+
 .act-btn:hover {
   color: var(--fg-0);
   background: var(--bg-3);

@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-06-01
+
+First stable release. Same surface as the 0.1.x line — CLI flags,
+HTTP API, WebSocket protocol, PID-file location and secret-key
+behaviour are now treated as stable. Breaking changes will warrant
+a 2.0.0.
+
+### Added
+- Pane controls in the sidebar (`◫` split right, `⊟` split down,
+  `✕` kill active pane). Wraps `tmux split-window -h/-v` and
+  `tmux kill-pane`. New endpoints
+  `POST/DELETE /api/sessions/:name/windows/:index/panes`.
+
+### Changed
+- Complete UI redesign — "Atelier Console" terminal-studio
+  aesthetic. Drop Bootstrap entirely in favour of a hand-written
+  design system with cool-neutral dark palette and a restrained
+  amber phosphor accent reserved for active states. Wordmark
+  `tonsh▋` and the empty state share a blinking caret signature
+  (kept on even when `prefers-reduced-motion: reduce` is set;
+  every other animation still respects it).
+- Full-mono UI via system mono fallback chain (SF Mono → Cascadia
+  Mono → JetBrains Mono → Menlo → Consolas → Ubuntu Mono → DejaVu
+  Sans Mono). No bundled UI font — system fonts get freetype /
+  ClearType / CoreText hinting that webfonts miss at low DPI.
+  Symbols Nerd Font Mono and Noto Sans Symbols 2 bundles stay for
+  terminal glyph fallback.
+- All sidebar action buttons unified as single-glyph BMP icons
+  (`+` new, `✎` rename, `✕` kill, `◫` / `⊟` splits). Kill hovers
+  shift to a rust danger color.
+- Replace Bootstrap Offcanvas with a custom CSS drawer
+  (`transform` + scrim, 220ms cubic-bezier). ESC and scrim-tap
+  close it.
+- Floating hamburger refined for visibility against the terminal
+  background; active session shows a faded left rail, active
+  window a 2px amber rail with a subtle phosphor glow; session
+  rows fade in staggered on first load.
+- Keypad-toggle icon `↕` → `⌨` — the original intent (an earlier
+  font in the chain lacked the glyph).
+
 ### Fixed
 - Android Chrome leaves stale pixels in the area a soft keyboard
   occupied after it's dismissed (compositor doesn't auto-invalidate).
@@ -15,33 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   settle) and forces xterm.js to fully reallocate its canvas via
   `clearTextureAtlas()` + a one-row resize wiggle, plus toggles a
   `translateZ(0)` transform on `#app` to kick the compositor.
-
-### Changed
-- Complete UI redesign — "Atelier Console" terminal-studio aesthetic.
-  Drop Bootstrap entirely in favour of a hand-written design system
-  with cool-neutral dark palette and a restrained amber phosphor
-  accent reserved for active states. Wordmark `tonsh▋` and empty
-  state share a blinking caret signature (kept on even when
-  `prefers-reduced-motion: reduce` is set; every other animation
-  still respects it).
-- Full-mono UI via system mono fallback chain (SF Mono → Cascadia
-  Mono → JetBrains Mono → Menlo → Consolas → Ubuntu Mono → DejaVu
-  Sans Mono). No bundled UI font — system fonts get freetype /
-  ClearType / CoreText hinting that webfonts miss at low DPI. The
-  Symbols Nerd Font Mono and Noto Sans Symbols 2 bundles stay for
-  terminal glyph fallback.
-- Replace Bootstrap Offcanvas with a custom CSS drawer
-  (`transform` + scrim, 220ms cubic-bezier). ESC and scrim-tap
-  close it.
 - Mobile: `overscroll-behavior: none` on the page chain — swiping
   near the top with the keypad open no longer exposes blank space
   from the browser's rubber-band scroll.
-- Sidebar: floating hamburger refined for visibility against the
-  terminal background; action buttons swap icons for short text
-  labels (`new` / `rename` / `kill`) with a rust hover on kill;
-  active session shows a faded left rail, active window a 2px amber
-  rail with a subtle phosphor glow; session rows fade-in staggered
-  on first load.
 
 ### Removed
 - `bootstrap` runtime dependency. The bundled `bootstrap.min.css`
@@ -84,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rare Unicode glyphs (powerline icons, media controls) render in
   the browser.
 
-[Unreleased]: https://github.com/bughela/tonsh/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/bughela/tonsh/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/bughela/tonsh/compare/v0.1.2...v1.0.0
 [0.1.2]: https://github.com/bughela/tonsh/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/bughela/tonsh/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/bughela/tonsh/releases/tag/v0.1.0

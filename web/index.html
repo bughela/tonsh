@@ -38,15 +38,21 @@
           <div class="action-rows">
             <div class="action-row">
               <span class="action-label">session</span>
-              <button id="new-session" class="act-btn" type="button" title="New session">new</button>
-              <button id="rename-session-btn" class="act-btn" type="button" title="Rename session">rename</button>
-              <button id="kill-session-btn" class="act-btn danger" type="button" title="Kill session">kill</button>
+              <button id="new-session" class="act-btn icon-btn" type="button" title="New session" aria-label="New session">+</button>
+              <button id="rename-session-btn" class="act-btn icon-btn" type="button" title="Rename session" aria-label="Rename session">✎</button>
+              <button id="kill-session-btn" class="act-btn icon-btn danger" type="button" title="Kill session" aria-label="Kill session">✕</button>
             </div>
             <div class="action-row">
               <span class="action-label">window</span>
-              <button id="new-window-btn" class="act-btn" type="button" title="New window">new</button>
-              <button id="rename-window-btn" class="act-btn" type="button" title="Rename window">rename</button>
-              <button id="kill-window-btn" class="act-btn danger" type="button" title="Kill window">kill</button>
+              <button id="new-window-btn" class="act-btn icon-btn" type="button" title="New window" aria-label="New window">+</button>
+              <button id="rename-window-btn" class="act-btn icon-btn" type="button" title="Rename window" aria-label="Rename window">✎</button>
+              <button id="kill-window-btn" class="act-btn icon-btn danger" type="button" title="Kill window" aria-label="Kill window">✕</button>
+            </div>
+            <div class="action-row">
+              <span class="action-label">pane</span>
+              <button id="split-pane-h-btn" class="act-btn icon-btn" type="button" title="Split pane to the right (side by side)" aria-label="Split right">◫</button>
+              <button id="split-pane-v-btn" class="act-btn icon-btn" type="button" title="Split pane downward (stacked)" aria-label="Split down">⊟</button>
+              <button id="kill-pane-btn" class="act-btn icon-btn danger" type="button" title="Kill active pane" aria-label="Kill pane">✕</button>
             </div>
           </div>
 
@@ -57,7 +63,7 @@
               <button id="font-plus" class="step-btn" type="button" aria-label="Larger">+</button>
             </div>
             <button id="keypad-toggle" class="ghost-btn" type="button" title="Toggle keypad" aria-label="Toggle keypad">
-              <span class="icon">↕</span>
+              <span class="icon">⌨</span>
             </button>
           </div>
         </footer>

@@ -579,6 +579,36 @@ document.getElementById('kill-window-btn').onclick = async () => {
   renderSessions(sessions);
 };
 
+async function splitPane(direction) {
+  if (!current || !currentWindow) return;
+  const ok = await api(
+    'POST',
+    `/api/sessions/${encodeURIComponent(current)}/windows/${currentWindow.index}/panes`,
+    { direction }
+  );
+  if (ok && term) term.focus();
+}
+
+document.getElementById('split-pane-h-btn').onclick = () => splitPane('h');
+document.getElementById('split-pane-v-btn').onclick = () => splitPane('v');
+
+document.getElementById('kill-pane-btn').onclick = async () => {
+  if (!current || !currentWindow) return;
+  if (!confirm('Kill active pane? Running work in it will be lost.')) return;
+  const ok = await api(
+    'DELETE',
+    `/api/sessions/${encodeURIComponent(current)}/windows/${currentWindow.index}/panes`
+  );
+  if (!ok) return;
+  // Killing the last pane removes the window; if it was the last window,
+  // the session is gone too. Refresh and tear down if needed.
+  const res = await fetch('/api/sessions', { headers: authHeaders() });
+  const { sessions } = await res.json();
+  if (!sessions.some((s) => s.name === current)) teardownTerm();
+  renderSessions(sessions);
+  if (term) term.focus();
+};
+
 document.getElementById('open-sidebar').onclick = () => {
   if (isMobile()) {
     openDrawer();

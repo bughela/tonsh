@@ -114,3 +114,26 @@ export async function newWindow(session) {
 export async function killWindow(session, index) {
   await run('tmux', ['kill-window', '-t', `${session}:${index}`]);
 }
+
+export function validatePaneDirection(direction) {
+  if (direction !== 'h' && direction !== 'v') {
+    return 'direction must be "h" (split right) or "v" (split down)';
+  }
+  return null;
+}
+
+// Both split and kill operate on the active pane of the targeted window.
+// tmux's target syntax `session:index` (without a `.pane`) defaults to the
+// active pane, which matches the UI's "act on the current pane" model.
+export async function splitPane(session, index, direction) {
+  await run('tmux', [
+    'split-window',
+    `-${direction}`,
+    '-t',
+    `${session}:${index}`,
+  ]);
+}
+
+export async function killPane(session, index) {
+  await run('tmux', ['kill-pane', '-t', `${session}:${index}`]);
+}

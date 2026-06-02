@@ -13,8 +13,11 @@ import {
   selectWindow,
   newWindow,
   killWindow,
+  splitPane,
+  killPane,
   validateSessionName,
   validateWindowName,
+  validatePaneDirection,
 } from './tmux.js';
 import { readConfig, writeConfig } from './config.js';
 import { attachSession } from './pty.js';
@@ -128,6 +131,29 @@ export async function startServer({ port, host, secret }) {
       return reply.code(400).send({ error: 'invalid window index' });
     }
     await selectWindow(req.params.name, index);
+    return { ok: true };
+  });
+
+  app.post('/api/sessions/:name/windows/:index/panes', async (req, reply) => {
+    const index = Number(req.params.index);
+    if (!Number.isInteger(index) || index < 0) {
+      return reply.code(400).send({ error: 'invalid window index' });
+    }
+    const direction = req.body && req.body.direction;
+    const err = validatePaneDirection(direction);
+    if (err) {
+      return reply.code(400).send({ error: err });
+    }
+    await splitPane(req.params.name, index, direction);
+    return { ok: true };
+  });
+
+  app.delete('/api/sessions/:name/windows/:index/panes', async (req, reply) => {
+    const index = Number(req.params.index);
+    if (!Number.isInteger(index) || index < 0) {
+      return reply.code(400).send({ error: 'invalid window index' });
+    }
+    await killPane(req.params.name, index);
     return { ok: true };
   });
 
