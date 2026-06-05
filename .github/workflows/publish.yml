@@ -1,0 +1,31 @@
+name: Publish to npm
+
+# 버전 태그(v1.2.3)를 push할 때만 배포한다.
+#   npm version patch && git push --follow-tags
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance(빌드 출처 증명)에 필요
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      # prepublishOnly가 build를 다시 돌리지만, 빌드 실패를 미리 잡기 위해 명시 실행
+      - run: npm run build
+
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
