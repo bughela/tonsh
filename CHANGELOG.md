@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-06-10
+
+### Changed
+- Minify the bundled service worker.
+
+## [1.1.0] - 2026-06-09
+
 ### Added
 - PWA support — installable as a standalone app via a web app
   manifest and a minimal service worker (no push notifications).
@@ -25,6 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "server unreachable" (via `navigator.onLine`) instead of showing
   a raw "Failed to fetch" when the app is opened without a
   connection.
+
+## [1.0.1] - 2026-06-05
+
+### Changed
+- Publishing moved to GitHub Actions; releases now carry npm
+  provenance (SLSA build attestation).
 
 ## [1.0.0] - 2026-06-01
 
@@ -119,7 +132,10 @@ a 2.0.0.
   rare Unicode glyphs (powerline icons, media controls) render in
   the browser.
 
-[Unreleased]: https://github.com/bughela/tonsh/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/bughela/tonsh/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/bughela/tonsh/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/bughela/tonsh/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/bughela/tonsh/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/bughela/tonsh/compare/v0.1.2...v1.0.0
 [0.1.2]: https://github.com/bughela/tonsh/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/bughela/tonsh/compare/v0.1.0...v0.1.1
