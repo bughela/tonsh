@@ -681,3 +681,12 @@ ensureAuth()
   .catch((e) => {
     document.getElementById('placeholder').textContent = e.message;
   });
+
+// PWA: register the service worker only in a secure context (HTTPS or
+// localhost). Over plain HTTP registration is rejected, so the guard keeps
+// those users error-free — they just don't get the installable app.
+if (window.isSecureContext && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}

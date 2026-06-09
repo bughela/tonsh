@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- PWA support — installable as a standalone app via a web app
+  manifest and a minimal service worker (no push notifications).
+  The service worker is registered only in a secure context (HTTPS
+  or localhost), so plain-HTTP users are unaffected — they just
+  don't get the install option. The manifest is linked with
+  `crossorigin="use-credentials"` so it loads behind an
+  authenticating reverse proxy (e.g. Traefik forwardAuth). New
+  `web/manifest.webmanifest` and `web/sw.js`, copied into `dist/`
+  at build.
+
+### Changed
+- New 512×512 app icon, reused for the favicon, Apple touch icon,
+  and the PWA manifest/splash icon.
+
 ## [1.0.0] - 2026-06-01
 
 First stable release. Same surface as the 0.1.x line — CLI flags,
