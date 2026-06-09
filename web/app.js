@@ -304,7 +304,10 @@ function openSocket() {
 function scheduleReconnect() {
   if (reconnectTimer) return;
   if (!showedReconnecting && term) {
-    term.write('\r\n\x1b[33m[connection lost — reconnecting…]\x1b[0m');
+    const msg = navigator.onLine
+      ? '[connection lost — reconnecting…]'
+      : '[offline — waiting for network…]';
+    term.write(`\r\n\x1b[33m${msg}\x1b[0m`);
     showedReconnecting = true;
   }
   reconnectAttempts += 1;
@@ -679,7 +682,17 @@ if (isMobile()) {
 ensureAuth()
   .then(fetchSessions)
   .catch((e) => {
-    document.getElementById('placeholder').textContent = e.message;
+    // A failed fetch (offline or server unreachable) throws a TypeError whose
+    // message is a cryptic "Failed to fetch" — show something actionable.
+    if (!navigator.onLine) {
+      placeholder.innerHTML =
+        "You're offline<br>tonsh needs a network connection to its server.";
+    } else if (e instanceof TypeError) {
+      placeholder.textContent =
+        "Can't reach the tonsh server. Make sure it's running.";
+    } else {
+      placeholder.textContent = e.message;
+    }
   });
 
 // PWA: register the service worker only in a secure context (HTTPS or

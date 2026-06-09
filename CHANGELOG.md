@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - New 512×512 app icon, reused for the favicon, Apple touch icon,
   and the PWA manifest/splash icon.
+- Clearer network messages — distinguish "device offline" from
+  "server unreachable" (via `navigator.onLine`) instead of showing
+  a raw "Failed to fetch" when the app is opened without a
+  connection.
 
 ## [1.0.0] - 2026-06-01
 
