@@ -21,7 +21,14 @@ await copyFile(join(root, 'web', 'index.html'), join(dist, 'index.html'));
 await copyFile(join(root, 'web', 'style.css'), join(dist, 'style.css'));
 await copyFile(join(root, 'web', 'favicon.png'), join(dist, 'favicon.png'));
 await copyFile(join(root, 'web', 'manifest.webmanifest'), join(dist, 'manifest.webmanifest'));
-await copyFile(join(root, 'web', 'sw.js'), join(dist, 'sw.js'));
+
+// Minify the service worker instead of copying it verbatim.
+await esbuild.build({
+  entryPoints: [join(root, 'web', 'sw.js')],
+  minify: true,
+  target: 'es2020',
+  outfile: join(dist, 'sw.js'),
+});
 await mkdir(join(dist, 'fonts'), { recursive: true });
 for (const f of [
   'SymbolsNerdFontMono.woff2',

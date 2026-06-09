@@ -71,6 +71,14 @@ The static assets (HTML/JS/CSS) themselves are public; only the API and PTY-atta
 - Swiping the terminal scrolls tmux history (synthesized as wheel events; works with tmux `mouse on`).
 - The page auto-reconnects after backgrounding / tab switches / network changes.
 
+## Install as an app (PWA)
+
+`tonsh` can be installed as a standalone app (no browser chrome) via your browser's **Install** / **Add to Home Screen**. It's purely an installable shell around the web UI — there are no push notifications.
+
+This needs a **secure context**: it works over `https://` or `http://localhost`. Served over plain HTTP to a LAN / Tailscale address, the install option simply won't appear — no error, it just stays a normal web page. Put `tonsh` behind a TLS reverse proxy if you want the installable app on other devices.
+
+It also works behind an authenticating reverse proxy (e.g. Traefik forwardAuth): the manifest is fetched with credentials, so it loads once you're signed in.
+
 ## Requirements
 
 - Node.js ≥ 20
